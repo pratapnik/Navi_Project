@@ -25,6 +25,8 @@
         android:layout_height="@dimen/match_constraint_dimen"
         android:layout_marginTop="@dimen/margin_16dp"
         android:layout_marginBottom="@dimen/margin_16dp"
+        android:scrollbars="vertical"
+        android:scrollbarSize="@dimen/margin_8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
