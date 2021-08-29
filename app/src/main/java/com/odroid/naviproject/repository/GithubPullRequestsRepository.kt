@@ -9,8 +9,11 @@ object GithubPullRequestsRepository {
 
     private const val state = "closed"
 
-    suspend fun getClosedPullRequests(): List<PullRequest>? {
-        val response = NetworkClient.githubPullRequestsApi.getPullRequests(state)
+    suspend fun getClosedPullRequests(pageNumber: Int): List<PullRequest>? {
+        val response = NetworkClient.githubPullRequestsApi.getPullRequests(state, pageNumber)
+        if(response.isSuccessful && response.body()?.isEmpty() == true) {
+            return emptyList()
+        }
         return response.body()?.let { getUpdatedList(it) }
     }
 

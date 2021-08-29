@@ -9,7 +9,7 @@ import com.odroid.naviproject.model.Resource
 import com.odroid.naviproject.repository.GithubPullRequestsRepository
 import kotlinx.coroutines.launch
 
-class MainActivityViewModel: ViewModel() {
+class MainActivityViewModel : ViewModel() {
 
     private val pullRequests = MutableLiveData<Resource<List<PullRequest>>>()
 
@@ -22,16 +22,19 @@ class MainActivityViewModel: ViewModel() {
 
         viewModelScope.launch {
             try {
-                val closedPullRequests = GithubPullRequestsRepository.getClosedPullRequests()
-                if(!closedPullRequests.isNullOrEmpty()) {
-                    pullRequests.postValue(Resource.success(closedPullRequests))
-                } else
-                    pullRequests.postValue(Resource.error(null))
-            } catch (e:Exception) {
+                val closedPullRequests = fetchPullRequests(0)
+                    if (closedPullRequests != null) {
+                        pullRequests.postValue(Resource.success(closedPullRequests))
+                    }
+            } catch (e: Exception) {
                 pullRequests.postValue(Resource.error(null))
             }
 
         }
+    }
+
+    suspend fun fetchPullRequests(pageNumber: Int): List<PullRequest>? {
+        return GithubPullRequestsRepository.getClosedPullRequests(pageNumber)
     }
 
     fun getPullRequests(): LiveData<Resource<List<PullRequest>>> {

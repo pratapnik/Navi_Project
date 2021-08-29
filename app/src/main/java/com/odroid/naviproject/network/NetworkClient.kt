@@ -4,7 +4,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object NetworkClient {
-    const val baseUrl = "https://api.github.com/repos/pratapnik/Psyche/"
+    const val baseUrl = "https://api.github.com/repos/quasarframework/quasar/"
 
     private val networkClient: Retrofit.Builder by lazy {
         Retrofit.Builder()

@@ -8,5 +8,6 @@ import retrofit2.http.Query
 interface GithubPullRequestsApi {
 
     @GET("pulls")
-    suspend fun getPullRequests(@Query("state") state: String): Response<List<PullRequest>>
+    suspend fun getPullRequests(@Query("state") state: String,
+        @Query("page") pageNumber: Int): Response<List<PullRequest>>
 }
