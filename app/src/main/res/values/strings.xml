@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Navi Project</string>
+    <string name="label_closed_pull_request_title">Closed Pull Requests</string>
+    <string name="label_opened_pr_desc">opened by %s on %s</string>
+    <string name="label_closed_pr_desc">closed on %s</string>
+    <string name="label_error_message">There was some error while fetching the pull requests</string>
+</resources>
