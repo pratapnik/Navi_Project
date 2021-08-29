@@ -1,6 +1,5 @@
 package com.odroid.naviproject.view
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,7 @@ import com.odroid.naviproject.model.PullRequest
 
 class PullRequestAdapter(
     private val pullRequests: ArrayList<PullRequest>
-    ) :
+) :
     RecyclerView.Adapter<PullRequestAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -24,10 +23,18 @@ class PullRequestAdapter(
 
         fun bindView(item: PullRequest) {
             prTitle.text = item.title
-            prOpenedDesc.text = String.format(itemView.context.getString(R.string.label_opened_pr_desc,
-                item.user?.userName, item.createdAt))
-            prClosedDesc.text = String.format(itemView.context.getString(R.string.label_closed_pr_desc,
-                item.closedAt))
+            prOpenedDesc.text = String.format(
+                itemView.context.getString(
+                    R.string.label_opened_pr_desc,
+                    item.user?.userName, item.createdAt
+                )
+            )
+            prClosedDesc.text = String.format(
+                itemView.context.getString(
+                    R.string.label_closed_pr_desc,
+                    item.closedAt
+                )
+            )
 
             Glide.with(itemView.context)
                 .load(item.user?.photoUrl)

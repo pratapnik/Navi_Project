@@ -22,10 +22,12 @@ class MainActivityViewModel : ViewModel() {
 
         viewModelScope.launch {
             try {
-                val closedPullRequests = fetchPullRequests(0)
-                    if (closedPullRequests != null) {
-                        pullRequests.postValue(Resource.success(closedPullRequests))
-                    }
+                val closedPullRequests = GithubPullRequestsRepository.getInitialClosedPullRequests()
+                if (closedPullRequests != null) {
+                    pullRequests.postValue(Resource.success(closedPullRequests))
+                } else {
+                    pullRequests.postValue(Resource.error(null))
+                }
             } catch (e: Exception) {
                 pullRequests.postValue(Resource.error(null))
             }
@@ -33,8 +35,16 @@ class MainActivityViewModel : ViewModel() {
         }
     }
 
-    suspend fun fetchPullRequests(pageNumber: Int): List<PullRequest>? {
-        return GithubPullRequestsRepository.getClosedPullRequests(pageNumber)
+    fun fetchMorePullRequests() {
+        viewModelScope.launch {
+            try {
+                val closedPullRequests = GithubPullRequestsRepository.getNextClosedPullRequests()
+                if (closedPullRequests != null) {
+                    pullRequests.postValue(Resource.success(closedPullRequests))
+                }
+            } catch (e: Exception) {
+            }
+        }
     }
 
     fun getPullRequests(): LiveData<Resource<List<PullRequest>>> {

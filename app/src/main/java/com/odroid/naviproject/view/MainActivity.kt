@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.odroid.naviproject.R
 import com.odroid.naviproject.model.PullRequest
 import com.odroid.naviproject.model.Status
+import com.odroid.naviproject.util.Constants
 import com.odroid.naviproject.viewmodel.MainActivityViewModel
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,7 +22,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var pullRequestAdapter: PullRequestAdapter
     private var prRecyclerView: RecyclerView? = null
     private var progressBar: ProgressBar? = null
-    private var titleView: TextView? =null
+    private var titleView: TextView? = null
+
+    private val isLastPage = false
+    private val isLoading = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +50,7 @@ class MainActivity : AppCompatActivity() {
             )
         )
         prRecyclerView?.adapter = pullRequestAdapter
+        prRecyclerView?.setOnScrollListener(recyclerViewOnScrollListener)
     }
 
     private fun setupViewModel() {
@@ -95,4 +99,25 @@ class MainActivity : AppCompatActivity() {
         pullRequestAdapter.addData(pullRequests)
         pullRequestAdapter.notifyDataSetChanged()
     }
+
+    private val recyclerViewOnScrollListener: RecyclerView.OnScrollListener =
+        object : RecyclerView.OnScrollListener() {
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val visibleItemCount: Int =
+                    (prRecyclerView?.layoutManager as LinearLayoutManager).childCount
+                val totalItemCount: Int =
+                    (prRecyclerView?.layoutManager as LinearLayoutManager).itemCount
+                val firstVisibleItemPosition: Int =
+                    (prRecyclerView?.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+                if (!isLoading && !isLastPage) {
+                    if (visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0 &&
+                        totalItemCount >= Constants.PAGE_SIZE
+                    ) {
+                        mainActivityViewModel.fetchMorePullRequests()
+                    }
+                }
+            }
+        }
 }

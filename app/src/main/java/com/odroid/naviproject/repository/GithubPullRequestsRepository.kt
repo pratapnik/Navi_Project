@@ -7,11 +7,26 @@ import com.odroid.naviproject.util.DateUtil
 
 object GithubPullRequestsRepository {
 
-    private const val state = "closed"
+    private var pageIndex = 1
 
-    suspend fun getClosedPullRequests(pageNumber: Int): List<PullRequest>? {
-        val response = NetworkClient.githubPullRequestsApi.getPullRequests(state, pageNumber)
-        if(response.isSuccessful && response.body()?.isEmpty() == true) {
+    suspend fun getInitialClosedPullRequests(): List<PullRequest>? {
+        val response = NetworkClient.githubPullRequestsApi.getPullRequests(
+            Constants.PULL_REQUEST_STATE,
+            Constants.PULL_REQUESTS_SORT, pageIndex
+        )
+        if (response.isSuccessful && response.body()?.isEmpty() == true) {
+            return emptyList()
+        }
+        return response.body()?.let { getUpdatedList(it) }
+    }
+
+    suspend fun getNextClosedPullRequests(): List<PullRequest>? {
+        pageIndex++
+        val response = NetworkClient.githubPullRequestsApi.getPullRequests(
+            Constants.PULL_REQUEST_STATE,
+            Constants.PULL_REQUESTS_SORT, pageIndex
+        )
+        if (response.isSuccessful && response.body()?.isEmpty() == true) {
             return emptyList()
         }
         return response.body()?.let { getUpdatedList(it) }
@@ -22,7 +37,8 @@ object GithubPullRequestsRepository {
         for (pullRequest in list) {
             val createdAt = getRequiredDate(pullRequest.createdAt)
             val closedAt = getRequiredDate(pullRequest.closedAt)
-            val newPullRequest = PullRequest(pullRequest.title, pullRequest.user, createdAt, closedAt)
+            val newPullRequest =
+                PullRequest(pullRequest.title, pullRequest.user, createdAt, closedAt)
             pullRequestList.add(newPullRequest)
         }
         return pullRequestList
@@ -32,7 +48,8 @@ object GithubPullRequestsRepository {
         return time?.let {
             DateUtil.getFormattedDate(
                 it, Constants.GITHUB_DATE_FORMAT,
-                Constants.MONTH_NAME_DATE_FORMAT)
+                Constants.MONTH_NAME_DATE_FORMAT
+            )
         } ?: ""
     }
 }
