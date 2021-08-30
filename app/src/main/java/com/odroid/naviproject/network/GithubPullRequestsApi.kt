@@ -8,7 +8,7 @@ import retrofit2.http.Query
 
 interface GithubPullRequestsApi {
 
-    @Headers("Authorization: token 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")
+    @Headers("Authorization: token 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")
     @GET("pulls")
     suspend fun getPullRequests(
         @Query("state") state: String,
