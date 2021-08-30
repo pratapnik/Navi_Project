@@ -19,7 +19,7 @@ object GithubPullRequestsRepository {
     }
 
     private suspend fun getClosedPullRequests(): List<PullRequest>? {
-        val response = NetworkClient.githubPullRequestsApi.getPullRequests(
+        val response = NetworkClient.GITHUB_PULL_REQUEST_API.getPullRequests(
             Constants.PULL_REQUEST_STATE,
             Constants.PULL_REQUESTS_SORT, pageIndex
         )

@@ -12,7 +12,7 @@ object NetworkClient {
             .addConverterFactory(GsonConverterFactory.create())
     }
 
-    val githubPullRequestsApi: GithubPullRequestsApi by lazy {
-        networkClient.build().create(GithubPullRequestsApi::class.java)
+    val GITHUB_PULL_REQUEST_API: GithubPullRequestApi by lazy {
+        networkClient.build().create(GithubPullRequestApi::class.java)
     }
 }
