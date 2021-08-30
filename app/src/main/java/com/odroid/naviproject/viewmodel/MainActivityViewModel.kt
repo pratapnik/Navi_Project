@@ -14,10 +14,10 @@ class MainActivityViewModel : ViewModel() {
     private val pullRequests = MutableLiveData<Resource<List<PullRequest>>>()
 
     init {
-        fetchClosedPullRequests()
+        fetchInitialClosedPullRequests()
     }
 
-    private fun fetchClosedPullRequests() {
+    private fun fetchInitialClosedPullRequests() {
         pullRequests.postValue(Resource.loading(null))
 
         viewModelScope.launch {

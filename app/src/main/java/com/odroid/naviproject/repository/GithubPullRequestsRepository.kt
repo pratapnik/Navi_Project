@@ -10,18 +10,15 @@ object GithubPullRequestsRepository {
     private var pageIndex = 1
 
     suspend fun getInitialClosedPullRequests(): List<PullRequest>? {
-        val response = NetworkClient.githubPullRequestsApi.getPullRequests(
-            Constants.PULL_REQUEST_STATE,
-            Constants.PULL_REQUESTS_SORT, pageIndex
-        )
-        if (response.isSuccessful && response.body()?.isEmpty() == true) {
-            return emptyList()
-        }
-        return response.body()?.let { getUpdatedList(it) }
+        return getClosedPullRequests()
     }
 
     suspend fun getNextClosedPullRequests(): List<PullRequest>? {
         pageIndex++
+        return getClosedPullRequests()
+    }
+
+    private suspend fun getClosedPullRequests(): List<PullRequest>? {
         val response = NetworkClient.githubPullRequestsApi.getPullRequests(
             Constants.PULL_REQUEST_STATE,
             Constants.PULL_REQUESTS_SORT, pageIndex
