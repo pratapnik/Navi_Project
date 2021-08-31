@@ -19,7 +19,7 @@ import com.odroid.naviproject.viewmodel.MainActivityViewModel
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mainActivityViewModel: MainActivityViewModel
-    private lateinit var pullRequestAdapter: PullRequestAdapter
+    private var pullRequestAdapter: PullRequestAdapter? = null
     private var prRecyclerView: RecyclerView? = null
     private var progressBar: ProgressBar? = null
     private var titleView: TextView? = null
@@ -96,11 +96,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun renderList(pullRequests: List<PullRequest>) {
-        pullRequestAdapter.addData(pullRequests)
-        pullRequestAdapter.notifyDataSetChanged()
+        pullRequestAdapter?.addData(pullRequests)
+        pullRequestAdapter?.notifyDataSetChanged()
     }
 
-    private val recyclerViewOnScrollListener: RecyclerView.OnScrollListener =
+    private var recyclerViewOnScrollListener: RecyclerView.OnScrollListener? =
         object : RecyclerView.OnScrollListener() {
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -120,4 +120,10 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+    override fun onDestroy() {
+        recyclerViewOnScrollListener = null
+        pullRequestAdapter = null
+        super.onDestroy()
+    }
 }
